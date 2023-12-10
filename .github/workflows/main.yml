@@ -59,14 +59,14 @@ jobs:
             - name: Update application properties file
               run: |
                 sed -i "s/^jdbc.username.*$/jdbc.username\=${{ secrets.RDS_USER }}/" src/main/resources/application.properties
-                sed -i "s/^jdbc.password.*$/jdbc.password\=${{ secrets.RDS_PASSWORD }}/" src/main/resources/application.properties
+                sed -i "s/^jdbc.password.*$/jdbc.password\=${{ secrets.RDA_PASSWORD }}/" src/main/resources/application.properties
                 sed -i "s/db01/${{ secrets.RDS_ENDPOINT }}/" src/main/resources/application.properties
 
             - name: upload image to ECR
               uses: appleboy/docker-ecr-action@master
               with:
                   access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                  secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
+                  secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                   registry: ${{ secrets.REGISTRY }}
                   repo: xprofile
                   region: ${{ env.AWS_REGION}}
