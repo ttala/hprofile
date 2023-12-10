@@ -2,6 +2,12 @@ name: xprofile actions
 on: workflow_dispatch
 env:
   AWS_REGION: eu-west-3
+  ECR_REPOSITORY: xprofile
+  ECS_SERVICE: xprofile-act-svc
+  ECS_CLUSTER: xprofile-act
+  ECS_TASK_DEFINITION: aws-files/taskdeffile.json
+  CONTAINER_NAME: xprofile
+
 jobs:
     Testing:
       runs-on: ubuntu-latest
@@ -49,7 +55,7 @@ jobs:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
             SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
 
-    Build_and_deploy:
+    Build_and_Publish:
         needs: Testing
         runs-on: ubuntu-latest
         steps: 
@@ -74,3 +80,9 @@ jobs:
                   daemon_off: false
                   dockerfile: ./Dockerfile
                   context: ./
+    Deploy:
+        needs: Build_and_Publish
+        runs-on: ubuntu-latest
+        steps:
+          - name: Code checkout
+            uses: actions/checkout@v4
